@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, TextField, Container, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 type Props = {};
 
@@ -13,7 +14,7 @@ const SignUp:React.FC<Props> = () => {
   const navigate = useNavigate();
    const handleSignUp = async (event: React.FormEvent) => {
        event.preventDefault();
-
+    console.log('Sign Up:', username, email, password);
   try {
    const response = await axios.post('http://localhost:8080/api/auth/signup', {
     username,
@@ -94,14 +95,11 @@ const SignUp:React.FC<Props> = () => {
           required
           fullWidth
         />
-        <Button
+        <button style={{ marginTop: '10px' }}
           type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
         >
           Sign Up
-        </Button>
+        </button>
       </form>
       <Typography variant="body1" style={{ marginTop: '1rem' }}>
         Already have an account? <Link to="/login">Login</Link>
