@@ -9,11 +9,7 @@ function App() {
   }
   return (
     <>
-      {window.location.pathname.toLowerCase() !== '/login' && window.location.pathname.toLowerCase() !== '/signup' && (
-      <>
-        <Navbar />
-      </>
-      )}
+      <Navbar />
       <Outlet />
     </>
   )

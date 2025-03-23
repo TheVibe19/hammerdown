@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Button, TextField, Container, Typography, InputAdornment, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { handleLogin } from '../../utils/authUtils'; // Import the handleLogin function
 import { Visibility, VisibilityOff } from '@mui/icons-material'; // Import visibility icons
+import axiosClient from '../../utils/axiosClient';
+import { User } from '../UserProfile/models/User';
 
 type Props = {};
 
@@ -18,9 +19,24 @@ const Login: React.FC<Props> = () => {
     setShowPassword(!showPassword);
   };
 
+   const handleLogin = async (username: string, password: string): Promise<number> => {
+      try {
+        const response = await axiosClient.post('auth/signin', { username, password });
+        if (response.status === 200) {
+          const user = new User(response.data.data.id, response.data.data.roles, response.data.data.email, response.data.data.phone, response.data.data.firstName, response.data.data.lastName);
+          console.log('Login successful:', response.data);
+          navigate('/profile', { state: { user } });
+        }
+        return response.status;
+      } catch (error) {
+        console.error('Login failed:', error);
+        return 500;
+      }
+    };
+
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const response: number = await handleLogin(username, password, navigate);
+    const response: number = await handleLogin(username, password);
     if (response !== 200) {
       setError('Invalid username or password');
     }

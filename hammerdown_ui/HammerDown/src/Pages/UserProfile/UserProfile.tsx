@@ -1,29 +1,11 @@
 import React, { useState } from 'react';
 import { Container, Typography, Grid, Avatar, Paper } from '@material-ui/core';
-import { User } from './models/User';
-
-import { useEffect } from 'react';
-
-const UserProfile: React.FC = (props) => {
-    const [avatar, setAvatar] = useState<string>('profile-pic-url');
-    const [user, setUser] = useState(new User("", [], "", "", "", ""));
+import { useUser } from '../../Context/UserProvider';
 
 
-    const fetchUserDetails = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/api/user', {
-                headers: {
-                    'HammerdownJwtAuth': "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYmMiLCJpYXQiOjE3NDE0NTg5MjIsImV4cCI6MTc0MTQ2NDkyMn0.c6cx4UxHoClSk4Xxmk3vUoM9YxoGxc8ogqaDhptBf2A"
-                }
-            });
-            setUser(response.data);
-            console.log('User details:', response);
-        } catch (error) {
-            console.error('Error fetching user details:', error);
-        }
-    };
-
-
+const UserProfile: React.FC = () => {
+  const { user, fetchUserDetails } = useUser();
+  const [avatar, setAvatar] = useState<string>('profile-pic-url');
 
   if (!user) {
     return <Typography variant="h6" style={{ textAlign: 'center' }}>No user data available</Typography>;
@@ -55,12 +37,10 @@ const UserProfile: React.FC = (props) => {
         <Grid item>
           <input
             accept="image/*"
-
             id="avatar-upload"
             type="file"
             onChange={handleAvatarChange}
           />
-        
         </Grid>
       </Grid>
       <Paper elevation={3} style={{ padding: '1rem', marginTop: '1rem' }}>
@@ -88,16 +68,6 @@ const UserProfile: React.FC = (props) => {
           <Grid item xs={12}>
             <Grid container spacing={1}>
               <Grid item xs={6}>
-                <Typography variant="h6">Funds Available</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography variant="body1">300 rs</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
                 <Typography variant="h6">Contact</Typography>
               </Grid>
               <Grid item xs={6}>
@@ -105,19 +75,9 @@ const UserProfile: React.FC = (props) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
-                <Typography variant="h6">Address</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography variant="body1">Mumbai</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
         </Grid>
       </Paper>
-      <button onClick={fetchUserDetails}>Fetch User Details</button>
+      <button onClick={fetchUserDetails}>Refresh User Details</button>
     </Container>
   );
 };

@@ -1,39 +1,46 @@
 import React, { useState } from 'react';
 import { Button, TextField, Container, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosClient from '../../utils/axiosClient';
 
 type Props = {};
 
-
-const SignUp:React.FC<Props> = () => {
-
-   const [username, setUsername] = useState('');
-   const [email, setEmail] = useState('');
-   const [password, setPassword] = useState('');
+const SignUp: React.FC<Props> = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
-   const handleSignUp = async (event: React.FormEvent) => {
-       event.preventDefault();
-    console.log('Sign Up:', username, email, password);
-  try {
-   const response = await axios.post('http://localhost:8080/api/auth/signup', {
-    username,
-    email,
-    password,
-   }, { withCredentials: true });
-   
-   if(response.status === 200){
-    console.log('Sign Up successful:', response.data);
-    navigate('/login');
-   }
-   else {
-      console.error('Sign Up failed');
+
+  const handleSignUp = async (username: string, email: string, password: string): Promise<number> => {
+    try {
+        const response = await axiosClient.post('/auth/signup', {
+            username,
+            email,
+            password,
+        });
+
+        if (response.status === 200) {
+            console.log('Sign Up successful:', response.data);
+            navigate('/login');
+        } else {
+            console.error('Sign Up failed');
+        }
+        return response.status;
+    } catch (error) {
+        console.error('An error occurred during Sign Up:', error);
+        return 500;
     }
-  }
-  catch(error){
-    console.error('An error occurred during Sign Up:', error);
-  }
-}
+};
+
+  const onSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const status = await handleSignUp(username, email, password); 
+    
+    if (status !== 200) {
+      console.error('Sign Up failed with status:', status);
+
+    }
+  };
 
   return (
     <Container maxWidth="sm">
@@ -41,8 +48,8 @@ const SignUp:React.FC<Props> = () => {
       <Typography variant="h4" component="h1" gutterBottom textAlign={'center'}>
         Sign Up
       </Typography>
-      <form  autoComplete="off" onSubmit={handleSignUp}>
-      <TextField
+      <form autoComplete="off" onSubmit={onSubmit}>
+        <TextField
           label="User Name"
           variant="outlined"
           margin="normal"
@@ -79,7 +86,7 @@ const SignUp:React.FC<Props> = () => {
           required
           fullWidth
         />
-         <TextField
+        <TextField
           label="Contact Number"
           type="number"
           variant="outlined"
@@ -87,7 +94,7 @@ const SignUp:React.FC<Props> = () => {
           required
           fullWidth
         />
-         <TextField
+        <TextField
           label="Address"
           type="text"
           variant="outlined"
@@ -95,16 +102,21 @@ const SignUp:React.FC<Props> = () => {
           required
           fullWidth
         />
-        <button style={{ marginTop: '10px' }}
+        <Button
           type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          style={{ marginTop: '10px' }}
         >
           Sign Up
-        </button>
+        </Button>
       </form>
       <Typography variant="body1" style={{ marginTop: '1rem' }}>
         Already have an account? <Link to="/login">Login</Link>
-       </Typography>
+      </Typography>
     </Container>
-    );
-}
+  );
+};
+
 export default SignUp;

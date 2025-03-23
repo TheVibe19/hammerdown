@@ -27,7 +27,7 @@ const products: Product[] = [
     details: 'Details of product 2.',
     imageUrl: 'https://www.pngkey.com/png/detail/233-2332677_image-500580-placeholder-transparent.png',
   },
-  // Add more products as needed
+
 ];
 
 const Home: React.FC = () => {

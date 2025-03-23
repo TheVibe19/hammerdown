@@ -31,6 +31,9 @@ const products: Product[] = [
 const MyProducts = (props: Props) => {
   return (
     <Container style={{ marginTop: '2rem' }}>
+      <Typography variant="h4" component="h2" gutterBottom>
+        My Products
+      </Typography>
       <Grid container spacing={4}>
       {products.map((product) => (
         <Grid item key={product.id} xs={12} sm={6} md={4}>
