@@ -4,35 +4,37 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Visibility, VisibilityOff } from '@mui/icons-material'; // Import visibility icons
 import axiosClient from '../../utils/axiosClient';
-import { User } from '../UserProfile/models/User';
+import { useUser } from '../../Context/UserProvider'; // Import useUser hook
 
 type Props = {};
 
 const Login: React.FC<Props> = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
+  const { fetchUserDetails } = useUser(); 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-   const handleLogin = async (username: string, password: string): Promise<number> => {
-      try {
-        const response = await axiosClient.post('auth/signin', { username, password });
-        if (response.status === 200) {
-          const user = new User(response.data.data.id, response.data.data.roles, response.data.data.email, response.data.data.phone, response.data.data.firstName, response.data.data.lastName);
-          console.log('Login successful:', response.data);
-          navigate('/profile', { state: { user } });
-        }
-        return response.status;
-      } catch (error) {
-        console.error('Login failed:', error);
-        return 500;
+  const handleLogin = async (username: string, password: string): Promise<number> => {
+    try {
+      const response = await axiosClient.post('auth/signin', { username, password });
+      if (response.status === 200) {
+        console.log('Login successful:', response.data);
+
+        await fetchUserDetails();
+
+        navigate('/profile');
       }
-    };
+      return response.status;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return 500;
+    }
+  };
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

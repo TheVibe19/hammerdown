@@ -4,9 +4,10 @@ import { useUser } from '../../Context/UserProvider';
 
 
 const UserProfile: React.FC = () => {
-  const { user, fetchUserDetails } = useUser();
+ const user = useUser().user;
+ console.log('User abc:', user);
   const [avatar, setAvatar] = useState<string>('profile-pic-url');
-
+  console.log('User:', user);
   if (!user) {
     return <Typography variant="h6" style={{ textAlign: 'center' }}>No user data available</Typography>;
   }
@@ -77,7 +78,6 @@ const UserProfile: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      <button onClick={fetchUserDetails}>Refresh User Details</button>
     </Container>
   );
 };

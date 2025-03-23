@@ -16,7 +16,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const fetchUserDetails = async () => {
     try {
       const response = await axiosClient.get('user');
-      setUser(response.data);
+      setUser(response.data.data);
       console.log('User details fetched:', response.data);
     } catch (error) {
       console.error('Error fetching user details:', error);

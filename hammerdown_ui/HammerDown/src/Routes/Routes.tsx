@@ -4,7 +4,6 @@ import Login from "../Pages/Login/Login";
 import SignUp from "../Pages/SignUp/SignUp";
 import Home from "../Pages/Home/Home";
 import UserProfile from "../Pages/UserProfile/UserProfile";
-import { User } from "../Pages/UserProfile/models/User";
 import MyProducts from "../Pages/MyProducts/MyProducts";
 
 export const router = createBrowserRouter([
@@ -18,7 +17,7 @@ export const router = createBrowserRouter([
                 {path:"profile",element:<UserProfile/>},
                 {path:"explore",element:<Home/>},
                 {path:"myProducts",element:<MyProducts/>},
-                {path:"myProducts/deom",element:<MyProducts/>},
+                {path:"myProducts/:id",element:<MyProducts/>},
         ]
     },
     
